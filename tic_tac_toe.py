@@ -75,7 +75,45 @@ def ai_move(board):
     move = random.choice(empty_cells)
     board[move[0]][move[1]] = 'O'
     return board
+
+
+
+def clever_ai_move(board):
+    print(f"Move player AI as 'O'")
     
+    # Проверка строк и столбцов на возможность блокировки
+    for i in range(3):
+        # Проверка строк
+        if board[i].count('X') == 2 and board[i].count(' ') == 1:
+            col = board[i].index(' ')
+            board[i][col] = 'O'
+            return board
+        
+        # Проверка столбцов
+        col_vals = [board[r][i] for r in range(3)]
+        if col_vals.count('X') == 2 and col_vals.count(' ') == 1:
+            row = col_vals.index(' ')
+            board[row][i] = 'O'
+            return board
+
+    # Проверка диагоналей на возможность блокировки
+    diag1 = [board[i][i] for i in range(3)]
+    if diag1.count('X') == 2 and diag1.count(' ') == 1:
+        empty_index = diag1.index(' ')
+        board[empty_index][empty_index] = 'O'
+        return board
+
+    diag2 = [board[i][2 - i] for i in range(3)]
+    if diag2.count('X') == 2 and diag2.count(' ') == 1:
+        empty_index = diag2.index(' ')
+        board[empty_index][2 - empty_index] = 'O'
+        return board
+    
+    # Если нет возможности заблокировать, то выбираем случайную клетку
+    empty_cells = [(r, c) for r in range(3) for c in range(3) if board[r][c] == " "]
+    move = random.choice(empty_cells)
+    board[move[0]][move[1]] = 'O'
+    return board
         
 if __name__ == "__main__":   
     print("Game tic-tac-toe\n")
@@ -99,7 +137,7 @@ if __name__ == "__main__":
         
         # хід гравця
         if current_player == 'O' and auto_game.lower() == "y":
-            board = ai_move(board)
+            board = clever_ai_move(board)
         else:
             board = player_move(board)
             
